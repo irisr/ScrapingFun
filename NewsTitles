@@ -1,0 +1,21 @@
+import csv
+import datetime
+import requests
+from bs4 import BeautifulSoup
+
+url = "http://www.nieuwsblad.be"
+r = requests.get(url)
+
+soup = BeautifulSoup(r.content)
+
+g_data = soup.find_all("div", {"class": "article-teaser__text"})
+
+today = datetime.datetime.now().strftime('%d-%m-%y')
+
+addressForSavingTitles = "D:\users\iris.roelens\My Documents\Python\Krantenkoppen\hetnieuwsblad.csv"
+with open(addressForSavingTitles, 'ab') as csvfile:
+	titlewriter = csv.writer(csvfile, delimiter=',')
+	for item in g_data:
+		title = item.contents[1].text
+		print title.encode('utf-8')
+		titlewriter.writerow([title.encode('utf-8'), today])
